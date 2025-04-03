@@ -21,6 +21,9 @@ for i in range(10):
         "--log-format", "simple", "--log-interval", "10",
         "--disable-validation",
         f"data-bin/iwslt14_bpe_split{i}"
+        "--max-epoch", "5",
+        "--log-interval", "1",
+        "--log-file", f"checkpoints/split{i}/train.log",
     ]
 
     subprocess.run(command)
