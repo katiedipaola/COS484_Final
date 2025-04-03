@@ -32,4 +32,4 @@ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cud
   --global-option="--fast_multihead_attn" ./
 
 pip install pyarrow
-pip install sentencepiece
+pip install subword-nmt
