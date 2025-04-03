@@ -18,7 +18,7 @@ for i in range(10):
         "--eval-bleu", "--eval-bleu-detok", "moses", "--eval-bleu-remove-bpe",
         "--best-checkpoint-metric", "bleu", "--maximize-best-checkpoint-metric",
         "--save-dir", f"checkpoints/split{i}",
-        "--log-format", "simple", "--log-interval", "10"
+        "--log-format", "simple", "--log-interval", "10",
         "--disable-validation"
     ]
 
