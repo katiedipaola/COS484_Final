@@ -4,7 +4,7 @@ for i in range(10):
     print(f"\n🚀 Training model on split {i}...\n")
 
     command = [
-        "fairseq-train", f"data-bin/iwslt14_bpe_split{i}",
+        "fairseq-train", 
         "--arch", "transformer",
         "--encoder-layers", "6", "--decoder-layers", "6",
         "--encoder-embed-dim", "512", "--decoder-embed-dim", "512",
@@ -19,7 +19,8 @@ for i in range(10):
         "--best-checkpoint-metric", "bleu", "--maximize-best-checkpoint-metric",
         "--save-dir", f"checkpoints/split{i}",
         "--log-format", "simple", "--log-interval", "10",
-        "--disable-validation"
+        "--disable-validation",
+        f"data-bin/iwslt14_bpe_split{i}"
     ]
 
     subprocess.run(command)
