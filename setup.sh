@@ -33,3 +33,4 @@ pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cud
 
 pip install pyarrow
 pip install subword-nmt
+pip install sacremoses
