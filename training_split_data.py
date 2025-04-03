@@ -20,7 +20,7 @@ for i in range(10):
         "--save-dir", f"checkpoints/split{i}",
         "--log-format", "simple", "--log-interval", "10",
         "--disable-validation",
-        f"data-bin/iwslt14_bpe_split{i}"
+        f"data-bin/iwslt14_bpe_split{i}",
         "--max-epoch", "5",
         "--log-interval", "1",
         "--log-file", f"checkpoints/split{i}/train.log",
