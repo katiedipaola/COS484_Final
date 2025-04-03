@@ -19,6 +19,7 @@ for i in range(10):
         "--best-checkpoint-metric", "bleu", "--maximize-best-checkpoint-metric",
         "--save-dir", f"checkpoints/split{i}",
         "--log-format", "simple", "--log-interval", "10"
+        "--disable-validation"
     ]
 
     subprocess.run(command)
