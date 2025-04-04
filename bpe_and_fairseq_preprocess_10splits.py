@@ -25,7 +25,7 @@ dataset = list(zip(src_lines, tgt_lines))
 # === STEP 2: Write 10 random 101k-sample subsets ===
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 for i in range(NUM_SPLITS):
-    subset = random.sample(dataset, SAMPLES_PER_SPLIT)
+    indices = random.sample(range(len(dataset)), SAMPLES_PER_SPLIT)
     with open(OUTPUT_DIR / f"train{i}.de", "w", encoding="utf-8") as f_de, \
          open(OUTPUT_DIR / f"train{i}.en", "w", encoding="utf-8") as f_en, \
          open(OUTPUT_DIR / f"indices{i}.txt", "w", encoding="utf-8") as f_idx:
