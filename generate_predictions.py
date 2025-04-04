@@ -5,7 +5,7 @@ for i in range(10):
 
     command = [
         "fairseq-generate",
-        f"data-bin/iwslt14_bpe_split{i}",
+        f"data-bin/iwslt14_bpe_full",
         "--path", f"checkpoints/split{i}/checkpoint1.pt",
         "--gen-subset", "train",
         "--beam", "5",
