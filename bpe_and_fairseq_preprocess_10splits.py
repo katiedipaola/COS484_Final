@@ -62,3 +62,24 @@ for i in range(NUM_SPLITS):
         f"--destdir data-bin/iwslt14_bpe_split{i} "
         f"--workers 2"
     )
+
+# === STEP 6: Prepare full dataset for evaluation ===
+FULL_BPE_DIR = Path("data/iwslt14_bpe_full")
+FULL_BPE_DIR.mkdir(parents=True, exist_ok=True)
+
+# Save original files as BPE-applied
+with open(FULL_BPE_DIR / "train.de", "w", encoding="utf-8") as f_de, \
+     open(FULL_BPE_DIR / "train.en", "w", encoding="utf-8") as f_en:
+    for src, tgt in dataset:
+        f_de.write(src.strip() + "\n")
+        f_en.write(tgt.strip() + "\n")
+
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {FULL_BPE_DIR}/train.de > {FULL_BPE_DIR}/bpe.de")
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {FULL_BPE_DIR}/train.en > {FULL_BPE_DIR}/bpe.en")
+
+os.system(
+    f"fairseq-preprocess --source-lang de --target-lang en "
+    f"--trainpref {FULL_BPE_DIR}/bpe "
+    f"--destdir data-bin/iwslt14_bpe_full "
+    f"--workers 2"
+)
