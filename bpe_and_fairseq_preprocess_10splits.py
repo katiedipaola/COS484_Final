@@ -30,7 +30,8 @@ for i in range(NUM_SPLITS):
          open(OUTPUT_DIR / f"train{i}.en", "w", encoding="utf-8") as f_en, \
          open(OUTPUT_DIR / f"indices{i}.txt", "w", encoding="utf-8") as f_idx:
              
-        for src, tgt in subset:
+        for idx in indices:
+            src, tgt = dataset[idx]
             f_de.write(src.strip() + "\n")
             f_en.write(tgt.strip() + "\n")
             f_idx.write(str(idx) + "\n")
