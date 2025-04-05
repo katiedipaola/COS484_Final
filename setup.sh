@@ -32,17 +32,15 @@ export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 
 # Clone the Fairseq repository
 git clone https://github.com/pytorch/fairseq
-cd fairseq || exit
+cd fairseq
+pip install .
 
-# Install Fairseq in editable mode
-pip install --editable ./
-
-CFLAGS="-stdlib=libc++" pip install --editable ./
+# CFLAGS="-stdlib=libc++" pip install --editable ./
 
 git clone https://github.com/NVIDIA/apex
 cd apex
 pip install -v --no-cache-dir --global-option="--cpp_ext" --global-option="--cuda_ext" \
-  --global-option="--deprecated_fused_adam" --global-option="--xentropy" \
+  --global-option="--deprecated_fused_adam" --global-option="--xentropy" --no-build-isolation\
   --global-option="--fast_multihead_attn" ./
 
 pip install pyarrow
