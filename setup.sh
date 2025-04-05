@@ -33,7 +33,7 @@ export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 # Clone the Fairseq repository
 git clone https://github.com/pytorch/fairseq
 cd fairseq
-pip install .
+CFLAGS='-std=c++11' pip install .
 
 # CFLAGS="-stdlib=libc++" pip install --editable ./
 
