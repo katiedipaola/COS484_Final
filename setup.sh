@@ -15,6 +15,7 @@ source fairseq_env/bin/activate
 pip install --upgrade pip==24.0
 pip install torch
 pip install "numpy<2.0" 
+pip install packaging
 pip install pyarrow subword-nmt sacremoses
 
 # Set CUDA_HOME to the correct location
