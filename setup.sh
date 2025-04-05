@@ -17,6 +17,13 @@ pip install torch
 pip install "numpy<2.0" 
 pip install pyarrow subword-nmt sacremoses
 
+# Set CUDA_HOME to the correct location
+export CUDA_HOME="/usr/local/cuda"  # Replace with the actual path, e.g., /usr/local/cuda or $HOME/cuda
+
+# Update the PATH to include CUDA bin and lib64 directories
+export PATH="$CUDA_HOME/bin:$PATH"
+export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+
 # # Ensure wget is installed
 # if ! command -v wget &> /dev/null; then
 #     echo "wget not found, installing..."
