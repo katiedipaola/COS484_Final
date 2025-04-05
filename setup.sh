@@ -2,6 +2,12 @@
 
 # Create and activate a virtual environment
 PYTHON_CMD=$(command -v python3.9)
+
+if [ -z "$PYTHON_CMD" ]; then
+  echo "python3.9 not found. Please install it or use pyenv."
+  exit 1
+fi
+
 $PYTHON_CMD -m venv fairseq_env
 source fairseq_env/bin/activate
 
@@ -9,12 +15,13 @@ source fairseq_env/bin/activate
 pip install --upgrade pip==24.0
 pip install torch
 pip install "numpy<2.0" 
+pip install pyarrow subword-nmt sacremoses
 
-# Ensure wget is installed
-if ! command -v wget &> /dev/null; then
-    echo "wget not found, installing..."
-    brew install wget
-fi
+# # Ensure wget is installed
+# if ! command -v wget &> /dev/null; then
+#     echo "wget not found, installing..."
+#     brew install wget
+# fi
 
 # Clone the Fairseq repository
 git clone https://github.com/pytorch/fairseq
