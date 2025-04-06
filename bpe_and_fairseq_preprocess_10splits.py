@@ -3,7 +3,6 @@ import random
 from pathlib import Path
 from shutil import copyfile
 
-# === CONFIG ===
 SRC_PATH = "fairseq/examples/translation/iwslt14.tokenized.de-en/train.de"
 TGT_PATH = "fairseq/examples/translation/iwslt14.tokenized.de-en/train.en"
 OUTPUT_DIR = Path("data/iwslt14_splits")
@@ -13,7 +12,7 @@ SAMPLES_PER_SPLIT = 101_000
 BPE_CODES = "bpe.codes"
 BPE_VOCAB_SIZE = 10000
 
-# === STEP 1: Load and shuffle dataset ===
+# Load and shuffle the dataset
 with open(SRC_PATH, encoding="utf-8") as f:
     src_lines = f.readlines()
 with open(TGT_PATH, encoding="utf-8") as f:
@@ -22,7 +21,7 @@ with open(TGT_PATH, encoding="utf-8") as f:
 assert len(src_lines) == len(tgt_lines), "Mismatch in line counts."
 dataset = list(zip(src_lines, tgt_lines))
 
-# === STEP 2: Write 10 random 101k-sample subsets ===
+# Create the random subsets
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 for i in range(NUM_SPLITS):
     indices = random.sample(range(len(dataset)), SAMPLES_PER_SPLIT)
@@ -36,7 +35,7 @@ for i in range(NUM_SPLITS):
             f_en.write(tgt.strip() + "\n")
             f_idx.write(str(idx) + "\n")
 
-# === STEP 3: Learn joint BPE ===
+# Learn joint BPE from the full dataset
 with open("full_corpus.txt", "w", encoding="utf-8") as f:
     for src, tgt in dataset:
         f.write(src.strip() + "\n")
@@ -44,7 +43,7 @@ with open("full_corpus.txt", "w", encoding="utf-8") as f:
 
 os.system(f"subword-nmt learn-bpe -s {BPE_VOCAB_SIZE} < full_corpus.txt > {BPE_CODES}")
 
-# === STEP 4: Apply BPE to all splits ===
+# Apply BPE to all splits 
 BPE_DIR.mkdir(parents=True, exist_ok=True)
 for i in range(NUM_SPLITS):
     split_bpe_dir = BPE_DIR / f"train{i}"
@@ -53,17 +52,11 @@ for i in range(NUM_SPLITS):
     os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {OUTPUT_DIR}/train{i}.de > {split_bpe_dir}/train.de")
     os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {OUTPUT_DIR}/train{i}.en > {split_bpe_dir}/train.en")
 
-# === STEP 5: fairseq-preprocess ===
-for i in range(NUM_SPLITS):
-    print(f"Preprocessing split {i}")
-    os.system(
-        f"fairseq-preprocess --source-lang de --target-lang en "
-        f"--trainpref {BPE_DIR}/train{i}/train "
-        f"--destdir data-bin/iwslt14_bpe_split{i} "
-        f"--workers 2"
-    )
+# Build shared vocabulary from full dataset
+SHARED_VOCAB_DIR = Path("data-bin/iwslt14_bpe_shared_vocab")
+SHARED_VOCAB_DIR.mkdir(parents=True, exist_ok=True)
 
-# === STEP 6: Prepare full dataset for evaluation ===
+# Save full dataset 
 FULL_BPE_DIR = Path("data/iwslt14_bpe_full")
 FULL_BPE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -74,12 +67,52 @@ with open(FULL_BPE_DIR / "train.de", "w", encoding="utf-8") as f_de, \
         f_de.write(src.strip() + "\n")
         f_en.write(tgt.strip() + "\n")
 
+# Apply BPE to full dataset
 os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {FULL_BPE_DIR}/train.de > {FULL_BPE_DIR}/bpe.de")
 os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {FULL_BPE_DIR}/train.en > {FULL_BPE_DIR}/bpe.en")
 
+# Preprocess full BPE data to generate shared vocab
 os.system(
     f"fairseq-preprocess --source-lang de --target-lang en "
     f"--trainpref {FULL_BPE_DIR}/bpe "
+    f"--destdir {SHARED_VOCAB_DIR} "
+    f"--workers 2"
+)
+
+# fairseq-preprocess all splits with shared vocab
+for i in range(NUM_SPLITS):
+    print(f"Preprocessing split {i}")
+    os.system(
+        f"fairseq-preprocess --source-lang de --target-lang en "
+        f"--trainpref {BPE_DIR}/train{i}/train "
+        f"--destdir data-bin/iwslt14_bpe_split{i} "
+        f"--workers 2"
+    )
+    os.system(
+        f"cp {SHARED_VOCAB_DIR}/dict.de.txt data-bin/iwslt14_bpe_split{i}/ && "
+        f"cp {SHARED_VOCAB_DIR}/dict.en.txt data-bin/iwslt14_bpe_split{i}/"
+    )
+# Prepare full dataset for evaluation with shared vocab
+EVAL_BPE_DIR = Path("data/iwslt14_bpe_eval")
+EVAL_BPE_DIR.mkdir(parents=True, exist_ok=True)
+
+with open(EVAL_BPE_DIR / "train.de", "w", encoding="utf-8") as f_de, \
+     open(EVAL_BPE_DIR / "train.en", "w", encoding="utf-8") as f_en:
+    for src, tgt in dataset:
+        f_de.write(src.strip() + "\n")
+        f_en.write(tgt.strip() + "\n")
+
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.de > {EVAL_BPE_DIR}/bpe.de")
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.en > {EVAL_BPE_DIR}/bpe.en")
+
+os.system(
+    f"fairseq-preprocess --source-lang de --target-lang en "
+    f"--trainpref {EVAL_BPE_DIR}/bpe "
     f"--destdir data-bin/iwslt14_bpe_full "
     f"--workers 2"
+)
+
+os.system(
+    f"cp {SHARED_VOCAB_DIR}/dict.de.txt data-bin/iwslt14_bpe_full/ && "
+    f"cp {SHARED_VOCAB_DIR}/dict.en.txt data-bin/iwslt14_bpe_full/"
 )
