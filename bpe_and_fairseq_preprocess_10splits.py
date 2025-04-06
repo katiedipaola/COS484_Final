@@ -102,12 +102,12 @@ with open(EVAL_BPE_DIR / "train.de", "w", encoding="utf-8") as f_de, \
         f_de.write(src.strip() + "\n")
         f_en.write(tgt.strip() + "\n")
 
-os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.de > {EVAL_BPE_DIR}/bpe.de")
-os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.en > {EVAL_BPE_DIR}/bpe.en")
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.de > {EVAL_BPE_DIR}/eval.de")
+os.system(f"subword-nmt apply-bpe -c {BPE_CODES} < {EVAL_BPE_DIR}/train.en > {EVAL_BPE_DIR}/eval.en")
 
 os.system(
     f"fairseq-preprocess --source-lang de --target-lang en "
-    f"--trainpref {EVAL_BPE_DIR}/bpe "
+    f"--trainpref {EVAL_BPE_DIR}/eval "
     f"--destdir data-bin/iwslt14_bpe_full "
     f"--workers 2"
 )
