@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# conda activate fairseq-gcc9
 curl -sS https://bootstrap.pypa.io/get-pip.py | python3.10
 pip install pip==23.2.1
 pip install fairseq
@@ -6,17 +8,15 @@ pip install subword-nmt torchmetrics
 
 git clone https://github.com/pytorch/fairseq.git
 cd fairseq
-pip install --editable ./
+pip install --editable . --verbose
 pip install subword-nmt sacremoses
 
-ln -s /content/fairseq/fairseq_cli/fairseq-preprocess /usr/local/bin/fairseq-preprocess
-chmod +x /usr/local/bin/fairseq-preprocess
+cd /scratch/network/kd5846/COS484_Final/fairseq
+mkdir -p /scratch/network/kd5846/bin
+ln -s /scratch/network/kd5846/COS484_Final/fairseq/fairseq_cli/fairseq-preprocess /scratch/network/kd5846/bin/fairseq-preprocess
+chmod +x /scratch/network/kd5846/bin/fairseq-preprocess
 
-cd fairseq
-bash examples/translation/prepare-iwslt14.sh
-
-find fairseq -name "train.de"
-ls fairseq/iwslt14.tokenized.de-en/
+bash /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/prepare-iwslt14.sh
 
 
 # # Create and activate a virtual environment
