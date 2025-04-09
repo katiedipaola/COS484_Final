@@ -18,6 +18,7 @@ chmod +x /scratch/network/kd5846/bin/fairseq-preprocess
 
 bash /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/prepare-iwslt14.sh
 
+<<<<<<< HEAD
 find /scratch/network/kd5846/COS484_Final/fairseq -name "train.de"
 ls /scratch/network/kd5846/COS484_Final/fairseq/iwslt14.tokenized.de-en/
 

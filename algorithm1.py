@@ -76,8 +76,28 @@ for i in valid_samples:
 
         memorization_scores[i] = avg_included - avg_excluded
     
-# Save the memorization scores
-import json
+# Convert memorization scores to a JSON-serializable format
+memorization_scores_serializable = {}
 
+for k, v in memorization_scores.items():
+    # If v is a tensor 
+    if isinstance(v, torch.Tensor):
+        # If it's a single-element tensor, extract the value
+        if v.numel() == 1:  
+            memorization_scores_serializable[k] = v.item()
+        else:
+            # Otherwise, handle it as a list of tensors
+            memorization_scores_serializable[k] = v.tolist()  # Convert entire tensor to list
+    elif isinstance(v, list):  # If it's a list of tensors
+        # Convert each tensor inside the list to a float
+        memorization_scores_serializable[k] = [elem.item() if isinstance(elem, torch.Tensor) else elem for elem in v]
+    else:
+        # If it's a simple type (float, int, etc.), use it as is
+        memorization_scores_serializable[k] = v
+
+# Save the memorization scores to a JSON file
+import json
 with open("memorization_scores.json", "w") as f:
-    json.dump(memorization_scores, f)
+    json.dump(memorization_scores_serializable, f)
+
+print("Memorization scores saved to 'memorization_scores.json'")
