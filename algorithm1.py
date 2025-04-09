@@ -67,8 +67,8 @@ for i in valid_samples:
         targets_included = [[ref] for _ in preds_included]
 
         # Use CHRFScore to get sentence-level scores
-        scores_excluded = chrf(preds_excluded, targets_excluded).tolist()
-        scores_included = chrf(preds_included, targets_included).tolist()
+        scores_excluded = chrf(preds_excluded, targets_excluded)
+        scores_included = chrf(preds_included, targets_included)
 
         avg_excluded = sum(scores_excluded) / len(scores_excluded)
         avg_included = sum(scores_included) / len(scores_included)
