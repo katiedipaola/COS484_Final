@@ -47,9 +47,13 @@ for model_id in range(10):
 print("Loaded model predictions")
 
 # -------------------------------
-# Score using chrF
+# Score using chrF, bleu, accuracy
 chrf = CHRFScore(return_sentence_level_score=True)
-memorization_scores = {}
+bleu = BLEUScore(n_gram=1)
+
+memorization_scores_chrf = {}
+memorization_scores_bleu = {}
+memorization_scores_acc = {}
 
 for i in valid_samples:
     excluded_models = sample_to_excluded_models[i]
@@ -63,16 +67,33 @@ for i in valid_samples:
         targets_excluded = [[ref]] * len(preds_excluded)
         targets_included = [[ref]] * len(preds_included)
 
+        # CHRF
         _, scores_excluded = chrf(preds_excluded, targets_excluded)
         _, scores_included = chrf(preds_included, targets_included)
+        memorization_scores_chrf[i] = (scores_included_chrf.mean() - scores_excluded_chrf.mean()).item()
 
-        memorization_scores[i] = (scores_included.mean() - scores_excluded.mean()).item()
+        # BLEU
+        scores_excluded_bleu = bleu(preds_excluded, targets_excluded)
+        scores_included_bleu = bleu(preds_included, targets_included)
+        memorization_scores_bleu[i] = (scores_included_bleu.mean() - scores_excluded_bleu.mean()).item()
+
+        # Accuracy
+        acc_excluded = sum(p == ref for p in preds_excluded) / len(preds_excluded)
+        acc_included = sum(p == ref for p in preds_included) / len(preds_included)
+        memorization_scores_acc[i] = acc_included - acc_excluded      
 
 print("Computed memorization scores")
 
 # -------------------------------
 # Save JSON output
-with open("memorization_scores.json", "w") as f:
-    json.dump(memorization_scores, f)
+with open("memorization_scores_chrf.json", "w") as f:
+    json.dump(memorization_scores_chrf, f)
+print("Memorization scores saved to 'memorization_scores_chrf.json'")
 
-print("Memorization scores saved to 'memorization_scores.json'")
+with open("memorization_scores_bleu.json", "w") as f:
+    json.dump(memorization_scores_bleu, f)
+print("Memorization scores saved to 'memorization_scores_bleu.json'")
+
+with open("memorization_scores_acc.json", "w") as f:
+    json.dump(memorization_scores_acc, f)
+print("Memorization scores saved to 'memorization_scores_acc.json'")
