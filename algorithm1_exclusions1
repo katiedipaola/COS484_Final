@@ -1,6 +1,6 @@
 import json
 from collections import defaultdict
-from torchmetrics.text import CHRFScore
+from torchmetrics.text import CHRFScore, BLEUScore
 import torch
 
 # -------------------------------
