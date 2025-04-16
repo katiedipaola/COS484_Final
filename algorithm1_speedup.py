@@ -77,10 +77,21 @@ for i in valid_samples:
         scores_included_bleu = bleu(preds_included, targets_included)
         memorization_scores_bleu[i] = (scores_included_bleu.mean() - scores_excluded_bleu.mean()).item()
 
+        ref_tokens = ref.split()
         # Accuracy
-        acc_excluded = sum(p == ref for p in preds_excluded) / len(preds_excluded)
-        acc_included = sum(p == ref for p in preds_included) / len(preds_included)
-        memorization_scores_acc[i] = acc_included - acc_excluded      
+        for p in preds_excluded:
+          # Tokenize the reference and prediction
+          pred_tokens = p.split()
+        for p in preds_included:
+          pred_tokens_i = p.split()
+
+          # Count how many tokens are in both the prediction and reference
+        common_tokens_exc = set(ref_tokens) & set(pred_tokens)
+        common_tokens_inc = set(ref_tokens) & set(pred_tokens_i)
+        acc_excluded = len(common_tokens_exc) / len(ref_tokens)
+        acc_included = len(common_tokens_inc) / len(ref_tokens)
+
+        memorization_scores_acc[i] = acc_included - acc_excluded     
 
 print("Computed memorization scores")
 
