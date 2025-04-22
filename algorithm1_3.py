@@ -82,7 +82,7 @@ if __name__ == "__main__":
     # Collect and save results into dictionaries
     memorization_scores_bleu = {i: bleu for (i, bleu) in results}
 
-    with open(f"memorization_scores_bleu_{task_id}_excl1.json", "w") as f:
+    with open(f"memorization_scores_bleu_{task_id}_excl3.json", "w") as f:
         json.dump(memorization_scores_bleu, f)
     print(f"Saved BLEU scores to memorization_scores_bleu_{task_id}.json")
 
