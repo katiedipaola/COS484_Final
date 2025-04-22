@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
     if task_id == 0:
         with open("model_preds3.json", "w") as f:
-                json.dump(model_preds, f)
-            print("Saved: model_preds3.json")
+            json.dump(model_preds, f)
+        print("Saved: model_preds3.json")
