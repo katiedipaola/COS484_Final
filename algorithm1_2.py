@@ -102,15 +102,15 @@ if __name__ == "__main__":
     memorization_scores_bleu = {i: bleu for (i, _, bleu, _) in results}
     memorization_scores_acc = {i: acc for (i, _, _, acc) in results}
 
-    with open(f"memorization_scores_chrf_{task_id}.json", "w") as f:
+    with open(f"memorization_scores_chrf_{task_id}_excl2.json", "w") as f:
         json.dump(memorization_scores_chrf, f)
     print(f"Saved CHRF scores to memorization_scores_chrf_{task_id}.json")
 
-    with open(f"memorization_scores_bleu_{task_id}.json", "w") as f:
+    with open(f"memorization_scores_bleu_{task_id}_excl2.json", "w") as f:
         json.dump(memorization_scores_bleu, f)
     print(f"Saved BLEU scores to memorization_scores_bleu_{task_id}.json")
 
-    with open(f"memorization_scores_acc_{task_id}.json", "w") as f:
+    with open(f"memorization_scores_acc_{task_id}_excl2.json", "w") as f:
         json.dump(memorization_scores_acc, f)
     print(f"Saved accuracy scores to memorization_scores_acc_{task_id}.json")
 
