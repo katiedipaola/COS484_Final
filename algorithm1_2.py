@@ -114,6 +114,7 @@ if __name__ == "__main__":
         json.dump(memorization_scores_acc, f)
     print(f"Saved accuracy scores to memorization_scores_acc_{task_id}.json")
 
-    with open("model_preds2.json", "w") as f:
-            json.dump(model_preds, f)
-        print("Saved: model_preds2.json")
+    if task_id == 0:
+        with open("model_preds2.json", "w") as f:
+                json.dump(model_preds, f)
+            print("Saved: model_preds2.json")
