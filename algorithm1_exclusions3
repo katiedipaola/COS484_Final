@@ -81,5 +81,5 @@ with open("memorization_scores_bleu3.json", "w") as f:
 print("Memorization scores saved to 'memorization_scores_bleu3.json'")
 
 with open("model_preds3.json", "w") as f:
-    json.dump(model_preds3, f)
+    json.dump(model_preds, f)
 print("Saved: model_preds3.json")
