@@ -80,7 +80,4 @@ with open("memorization_scores_bleu1.json", "w") as f:
     json.dump(memorization_scores_bleu1, f)
 print("Memorization scores saved to 'memorization_scores_bleu1.json'")
 
-with open("model_preds1.json", "w") as f:
-    json.dump(model_preds, f)
-print("Saved: model_preds1.json")
 
