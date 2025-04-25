@@ -22,7 +22,7 @@ def countTopWords(words, k):
     return listed[0:k]
 
 # Load the training data from the file 'train.de'
-with open('/content/fairseq/iwslt14.tokenized.de-en/train.de', 'r') as f:
+with open('fairseq/iwslt14.tokenized.de-en/train.de', 'r') as f:
     train_de = f.readlines()
 # Split the data into words
 train_de_words = []
