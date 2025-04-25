@@ -18,6 +18,6 @@ command = [
     "--log-format", "simple", "--log-interval", "10",
     "--valid-subset", "train",
     f"data-bin/iwslt14_bpe_full",
-    "--max-epoch", "5"
+    "--max-epoch", "70"
 ]
 subprocess.run(command)
