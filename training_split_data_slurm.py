@@ -19,7 +19,6 @@ for i in range(2, 10):
         "--best-checkpoint-metric", "bleu", "--maximize-best-checkpoint-metric",
         "--save-dir", f"checkpoints/split{i}",
         "--log-format", "simple", "--log-interval", "10",
-        "--disable-validation",
         "--valid-subset", "train",
         f"data-bin/iwslt14_bpe_split{i}",
         "--max-epoch", "70"
