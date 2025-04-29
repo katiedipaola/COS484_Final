@@ -178,7 +178,8 @@ plt.ylabel('Hallucinations')
 plt.legend()
 
 plt.title('Hallucinations vs Memorization Values')
-
+plt.tight_layout()
+plt.savefig("figures/hallucinations_vs_memorization.png", dpi=300)
 plt.show()
 
 
@@ -244,5 +245,6 @@ plt.ylabel('Unique Hallucinations')
 plt.legend()
 
 plt.title('Hallucinations: Random vs Memorized')
-
+plt.tight_layout()
+plt.savefig("figures/hallucinations_random_vs_memorized.png", dpi=300)
 plt.show()
