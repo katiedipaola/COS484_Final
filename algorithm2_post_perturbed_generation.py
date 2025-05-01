@@ -137,28 +137,57 @@ unique_H_rand_acc = Unique(H_rand_acc)
 
 # with BLEU scores onwards:
 # data collection for Figure 3 (Top)
-sorted_dictionary = sorted(dictionary_bleu.items(), key=lambda x: x[1], reverse=True)
-sorted_dictionary_split = np.array_split(sorted_dictionary, 10)
-print(sorted_dictionary)
-total_mems = []
-unique_mems = []
-for i in range(10):
-  subdict = dict(sorted_dictionary_split[i])  # convert chunk back to dict
-  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(subdict), sorted_dictionary=subdict)
-  H_mem = algorithm2_from_predictions(model_preds=model_preds,
-    perturbed_preds=perturbed_preds_full_model,
-    parallel_corpus= parallel_mem,
-    indices=indices,
-    T=T,
-    model_id=0)
-  H_mem_len = len(H_mem)
-  unique_H_mem = Unique(H_mem)
-  unique_H_mem_len = len(unique_H_mem)
-  total_mems.append(H_mem_len)
-  unique_mems.append(unique_H_mem_len)
+def topfiguredata(dictionary):
+  sorted_dictionary = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+  sorted_dictionary_split = np.array_split(sorted_dictionary, 10)
+  print(sorted_dictionary)
+  total_mems = []
+  unique_mems = []
+  for i in range(10):
+    subdict = dict(sorted_dictionary_split[i])  # convert chunk back to dict
+    parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(subdict), sorted_dictionary=subdict)
+    H_mem = algorithm2_from_predictions(model_preds=model_preds,
+      perturbed_preds=perturbed_preds_full_model,
+      parallel_corpus= parallel_mem,
+      indices=indices,
+      T=T,
+      model_id=0)
+    H_mem_len = len(H_mem)
+    unique_H_mem = Unique(H_mem)
+    unique_H_mem_len = len(unique_H_mem)
+    total_mems.append(H_mem_len)
+    unique_mems.append(unique_H_mem_len)
+  return total_mems, unique_mems
 
+total_mems_acc, unique_mems_acc = topfiguredata(dictionary_acc)
+total_mems_bleu, unique_mems_bleu = topfiguredata(dictionary_bleu)
+total_mems_chrf, unique_mems_chrf = topfiguredata(dictionary_chrf)
 
-# graph for Figure 3 (Top)
+# graph for Figure 3 (Top) acc
+import matplotlib.pyplot as plt
+import numpy as np
+
+labels = ['Top', '>0.9', '>0.8', '>0.7', '>0.6', '>0.5', '>0.4', '>0.3', '>0.2', '>0.1', '>0']
+
+bar_width = 0.5
+
+pos_unique = np.arange(len(unique_mems_acc))
+pos_total = [x + bar_width for x in pos_unique]
+
+plt.bar(pos_unique, unique_mems_acc, width=bar_width, label='Unique HP', color='blue')
+plt.bar(pos_total, total_mems_acc, width=bar_width, label='Total HP', color='orange')
+
+plt.xlabel('Memorization Values')
+plt.ylabel('Hallucinations')
+
+plt.legend()
+
+plt.title('Hallucinations vs Memorization Values for Accuracy Metric')
+plt.tight_layout()
+plt.savefig("figures/hallucinations_vs_memorization_acc.png", dpi=300)
+plt.show()
+
+# graph for Figure 3 (Top) bleu
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -177,10 +206,32 @@ plt.ylabel('Hallucinations')
 
 plt.legend()
 
-plt.title('Hallucinations vs Memorization Values')
+plt.title('Hallucinations vs Memorization Values for BLEU Metric')
 plt.tight_layout()
-plt.savefig("figures/hallucinations_vs_memorization.png", dpi=300)
+plt.savefig("figures/hallucinations_vs_memorization_bleu.png", dpi=300)
 plt.show()
+
+# graph for Figure 3 (Top) chrf
+labels = ['Top', '>0.9', '>0.8', '>0.7', '>0.6', '>0.5', '>0.4', '>0.3', '>0.2', '>0.1', '>0']
+
+bar_width = 0.5
+
+pos_unique = np.arange(len(unique_mems_chrf))
+pos_total = [x + bar_width for x in pos_unique]
+
+plt.bar(pos_unique, unique_mems_chrf, width=bar_width, label='Unique HP', color='blue')
+plt.bar(pos_total, total_mems_chrf, width=bar_width, label='Total HP', color='orange')
+
+plt.xlabel('Memorization Values')
+plt.ylabel('Hallucinations')
+
+plt.legend()
+
+plt.title('Hallucinations vs Memorization Values for chrF Metric')
+plt.tight_layout()
+plt.savefig("figures/hallucinations_vs_memorization_chrf.png", dpi=300)
+plt.show()
+
 
 
 dictionary_bleu1 = sort_mems("memorization_scores_bleu1.json")
@@ -188,13 +239,23 @@ dictionary_bleu2 = sort_mems("memorization_scores_bleu.json")
 dictionary_bleu3 = sort_mems("memorization_scores_bleu3.json")
 dictionary_bleu4 = sort_mems("memorization_scores_bleu4.json")
 
+dictionary_chrf1 = sort_mems("memorization_scores_chrf1.json")
+dictionary_chrf2 = sort_mems("memorization_scores_chrf.json")
+dictionary_chrf3 = sort_mems("memorization_scores_chrf3.json")
+dictionary_chrf4 = sort_mems("memorization_scores_chrf4.json")
 
-exclusions = [1, 2, 3, 4]
-ex_dicts = [dictionary_bleu1, dictionary_bleu2, dictionary_bleu3, dictionary_bleu4]
-ex_rand = []
-ex_mem = []
+dictionary_acc1 = sort_mems("memorization_scores_acc1.json")
+dictionary_acc2 = sort_mems("memorization_scores_accf.json")
+dictionary_acc3 = sort_mems("memorization_scores_acc3.json")
+dictionary_acc4 = sort_mems("memorization_scores_acc4.json")
 
-for i, sorted_dictionary in zip(exclusions, ex_dicts):
+def bottom_figure_data(ex_dicts_metric):
+  exclusions = [1, 2, 3, 4]
+  ex_dicts = ex_dicts_metric
+  ex_rand = []
+  ex_mem = []
+
+  for i, sorted_dictionary in zip(exclusions, ex_dicts):
     print(f"\n Processing exclusion >= {i}...")
 
     # Get top 100 memorized and 100 random examples
@@ -225,26 +286,78 @@ for i, sorted_dictionary in zip(exclusions, ex_dicts):
     ex_mem.append(len(Unique(H_mem)))
     ex_rand.append(len(Unique(H_rand)))
 
-print(f"    Mem: {ex_mem} | Rand: {ex_rand}")
+  print(f"    Mem: {ex_mem} | Rand: {ex_rand}")
+
+  return ex_mem, ex_rand
+
+ex_dicts_chrf = [dictionary_chrf1, dictionary_chrf2, dictionary_chrf3, dictionary_chrf4]
+ex_dicts_bleu = [dictionary_bleu1, dictionary_bleu2, dictionary_bleu3, dictionary_bleu4]
+ex_dicts_acc = [dictionary_acc1, dictionary_acc2, dictionary_acc3, dictionary_acc4]
+
+ex_mem_chrf, ex_rand_chrf = bottom_figure_data(ex_dicts_chrf)
+ex_mem_bleu, ex_rand_bleu = bottom_figure_data(ex_dicts_bleu)
+ex_mem_acc, ex_rand_acc = bottom_figure_data(ex_dicts_acc)
 
 
-# graph for Figure 3 (Bottom)
+# graph for Figure 3 (Bottom) chrF
 labels = ['>1', '>2', '>3', '>4']
 
 bar_width = 0.5
 
-pos_rand = np.arange(len(ex_rand))
+pos_rand = np.arange(len(ex_rand_chrf))
 pos_mem = [x + bar_width for x in pos_rand]
 
-plt.bar(pos_rand, ex_rand, width=bar_width, label='Random', color='blue')
-plt.bar(pos_mem, ex_mem, width=bar_width, label='Memorized', color='orange')
+plt.bar(pos_rand, ex_rand_chrf, width=bar_width, label='Random', color='blue')
+plt.bar(pos_mem, ex_mem_chrf, width=bar_width, label='Memorized', color='orange')
 
 plt.xlabel('Number of Exclusions')
 plt.ylabel('Unique Hallucinations')
 
 plt.legend()
 
-plt.title('Hallucinations: Random vs Memorized')
+plt.title('Hallucinations: Random vs Memorized for chrF Metric')
 plt.tight_layout()
-plt.savefig("figures/hallucinations_random_vs_memorized.png", dpi=300)
+plt.savefig("figures/hallucinations_random_vs_memorized_chrf.png", dpi=300)
+plt.show()
+
+# graph for Figure 3 (Bottom) bleu
+labels = ['>1', '>2', '>3', '>4']
+
+bar_width = 0.5
+
+pos_rand = np.arange(len(ex_rand_bleu))
+pos_mem = [x + bar_width for x in pos_rand]
+
+plt.bar(pos_rand, ex_rand_bleu, width=bar_width, label='Random', color='blue')
+plt.bar(pos_mem, ex_mem_bleu, width=bar_width, label='Memorized', color='orange')
+
+plt.xlabel('Number of Exclusions')
+plt.ylabel('Unique Hallucinations')
+
+plt.legend()
+
+plt.title('Hallucinations: Random vs Memorized for BLEU Metric')
+plt.tight_layout()
+plt.savefig("figures/hallucinations_random_vs_memorized_bleu.png", dpi=300)
+plt.show()
+
+# graph for Figure 3 (Bottom) acc
+labels = ['>1', '>2', '>3', '>4']
+
+bar_width = 0.5
+
+pos_rand = np.arange(len(ex_rand_acc))
+pos_mem = [x + bar_width for x in pos_rand]
+
+plt.bar(pos_rand, ex_rand_acc, width=bar_width, label='Random', color='blue')
+plt.bar(pos_mem, ex_mem_acc, width=bar_width, label='Memorized', color='orange')
+
+plt.xlabel('Number of Exclusions')
+plt.ylabel('Unique Hallucinations')
+
+plt.legend()
+
+plt.title('Hallucinations: Random vs Memorized for Accuracy Metric')
+plt.tight_layout()
+plt.savefig("figures/hallucinations_random_vs_memorized_acc.png", dpi=300)
 plt.show()
