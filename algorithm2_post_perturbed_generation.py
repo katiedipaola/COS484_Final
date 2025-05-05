@@ -137,99 +137,108 @@ unique_H_rand_acc = Unique(H_rand_acc)
 
 # with BLEU scores onwards:
 # data collection for Figure 3 (Top)
-def topfiguredata(dictionary):
+def topfiguredata(dictionary, threshold):
   sorted_dictionary = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
-  sorted_dictionary_split = np.array_split(sorted_dictionary, 10)
+  sorted_dictionary_threshold = {k: v for k, v in sorted_dictionary.items() if v > threshold}
   print(sorted_dictionary)
-  total_mems = []
-  unique_mems = []
-  for i in range(10):
-    subdict = dict(sorted_dictionary_split[i])  # convert chunk back to dict
-    parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(subdict), sorted_dictionary=subdict)
-    H_mem = algorithm2_from_predictions(model_preds=model_preds,
-      perturbed_preds=perturbed_preds_full_model,
-      parallel_corpus= parallel_mem,
-      indices=indices,
-      T=T,
-      model_id=0)
-    H_mem_len = len(H_mem)
-    unique_H_mem = Unique(H_mem)
-    unique_H_mem_len = len(unique_H_mem)
-    total_mems.append(H_mem_len)
-    unique_mems.append(unique_H_mem_len)
-  return total_mems, unique_mems
 
-total_mems_acc, unique_mems_acc = topfiguredata(dictionary_acc)
-total_mems_bleu, unique_mems_bleu = topfiguredata(dictionary_bleu)
-total_mems_chrf, unique_mems_chrf = topfiguredata(dictionary_chrf)
+  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(subdict), sorted_dictionary=sorted_dictionary_threshold)
+  H_mem = algorithm2_from_predictions(model_preds=model_preds,
+  perturbed_preds=perturbed_preds_full_model,
+  parallel_corpus= parallel_mem,
+  indices=indices,
+  T=T,
+  model_id=0)
+  H_mem_len = len(H_mem)
+  unique_H_mem = Unique(H_mem)
+  unique_H_mem_len = len(unique_H_mem)
+  total_mems.append(H_mem_len)
+  unique_mems.append(unique_H_mem_len)
+    
+  return H_mem_len, unique_H_mem_len
+
+thresholds = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
+
+total_mem_acc = []
+unique_mem_acc = []
+total_mem_bleu = []
+unique_mem_bleu = []
+total_mem_chrf = []
+unique_mem_chrf = []
+
+for threshold in thresholds:
+    mem_len_acc, unique_mem_len_acc = topfiguredata(dictionary_acc, threshold)
+    mem_len_bleu, unique_mem_len_bleu = topfiguredata(dictionary_bleu, threshold)
+    mem_len_chrf, unique_mem_len_chrf = topfiguredata(dictionary_chrf, threshold)
+
+    total_mem_acc.append(mem_len_acc)
+    unique_mem_acc.append(unique_mem_len_acc)
+    total_mem_bleu.append(mem_len_bleu)
+    unique_mem_bleu.append(unique_mem_len_bleu)
+    total_mem_chrf.append(mem_len_chrf)
+    unique_mem_chrf.append(unique_mem_len_chrf)
+
 
 # graph for Figure 3 (Top) acc
 import matplotlib.pyplot as plt
 import numpy as np
 
 labels = ['Top', '>0.9', '>0.8', '>0.7', '>0.6', '>0.5', '>0.4', '>0.3', '>0.2', '>0.1', '>0']
+bar_width = 0.4
 
-bar_width = 0.5
+x = np.arange(len(labels))  # center positions
 
-pos_unique = np.arange(len(unique_mems_acc))
-pos_total = [x + bar_width for x in pos_unique]
+plt.figure(figsize=(10, 6))
+plt.bar(x - bar_width/2, unique_mem_acc, width=bar_width, label='Unique HP', color='blue')
+plt.bar(x + bar_width/2, total_mem_acc, width=bar_width, label='Total HP', color='orange')
 
-plt.bar(pos_unique, unique_mems_acc, width=bar_width, label='Unique HP', color='blue')
-plt.bar(pos_total, total_mems_acc, width=bar_width, label='Total HP', color='orange')
-
+plt.xticks(x, labels, rotation=45)
 plt.xlabel('Memorization Values')
 plt.ylabel('Hallucinations')
-
-plt.legend()
-
 plt.title('Hallucinations vs Memorization Values for Accuracy Metric')
+plt.legend()
 plt.tight_layout()
 plt.savefig("figures/hallucinations_vs_memorization_acc.png", dpi=300)
 plt.show()
 
 # graph for Figure 3 (Top) bleu
-import matplotlib.pyplot as plt
-import numpy as np
 
 labels = ['Top', '>0.9', '>0.8', '>0.7', '>0.6', '>0.5', '>0.4', '>0.3', '>0.2', '>0.1', '>0']
+bar_width = 0.4
 
-bar_width = 0.5
+x = np.arange(len(labels))  # center positions
 
-pos_unique = np.arange(len(unique_mems))
-pos_total = [x + bar_width for x in pos_unique]
+plt.figure(figsize=(10, 6))
+plt.bar(x - bar_width/2, unique_mem_bleu, width=bar_width, label='Unique HP', color='blue')
+plt.bar(x + bar_width/2, total_mem_bleu, width=bar_width, label='Total HP', color='orange')
 
-plt.bar(pos_unique, unique_mems, width=bar_width, label='Unique HP', color='blue')
-plt.bar(pos_total, total_mems, width=bar_width, label='Total HP', color='orange')
-
+plt.xticks(x, labels, rotation=45)
 plt.xlabel('Memorization Values')
 plt.ylabel('Hallucinations')
-
+plt.title('Hallucinations vs Memorization Values for Accuracy Metric')
 plt.legend()
-
-plt.title('Hallucinations vs Memorization Values for BLEU Metric')
 plt.tight_layout()
-plt.savefig("figures/hallucinations_vs_memorization_bleu.png", dpi=300)
+plt.savefig("figures/hallucinations_vs_memorization_acc.png", dpi=300)
 plt.show()
 
 # graph for Figure 3 (Top) chrf
+
 labels = ['Top', '>0.9', '>0.8', '>0.7', '>0.6', '>0.5', '>0.4', '>0.3', '>0.2', '>0.1', '>0']
+bar_width = 0.4
 
-bar_width = 0.5
+x = np.arange(len(labels))  # center positions
 
-pos_unique = np.arange(len(unique_mems_chrf))
-pos_total = [x + bar_width for x in pos_unique]
+plt.figure(figsize=(10, 6))
+plt.bar(x - bar_width/2, unique_mem_chrf, width=bar_width, label='Unique HP', color='blue')
+plt.bar(x + bar_width/2, total_mem_chrf, width=bar_width, label='Total HP', color='orange')
 
-plt.bar(pos_unique, unique_mems_chrf, width=bar_width, label='Unique HP', color='blue')
-plt.bar(pos_total, total_mems_chrf, width=bar_width, label='Total HP', color='orange')
-
+plt.xticks(x, labels, rotation=45)
 plt.xlabel('Memorization Values')
 plt.ylabel('Hallucinations')
-
+plt.title('Hallucinations vs Memorization Values for Accuracy Metric')
 plt.legend()
-
-plt.title('Hallucinations vs Memorization Values for chrF Metric')
 plt.tight_layout()
-plt.savefig("figures/hallucinations_vs_memorization_chrf.png", dpi=300)
+plt.savefig("figures/hallucinations_vs_memorization_acc.png", dpi=300)
 plt.show()
 
 
