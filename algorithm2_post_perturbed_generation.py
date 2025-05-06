@@ -142,7 +142,7 @@ def topfiguredata(dictionary, threshold):
   sorted_dictionary_threshold = {k: v for k, v in sorted_dictionary.items() if v > threshold}
   print(sorted_dictionary)
 
-  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(subdict), sorted_dictionary=sorted_dictionary_threshold)
+  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(sorted_dictionar_threshold), sorted_dictionary=sorted_dictionary_threshold)
   H_mem = algorithm2_from_predictions(model_preds=model_preds,
   perturbed_preds=perturbed_preds_full_model,
   parallel_corpus= parallel_mem,
@@ -152,24 +152,28 @@ def topfiguredata(dictionary, threshold):
   H_mem_len = len(H_mem)
   unique_H_mem = Unique(H_mem)
   unique_H_mem_len = len(unique_H_mem)
-  total_mems.append(H_mem_len)
-  unique_mems.append(unique_H_mem_len)
-    
+  
   return H_mem_len, unique_H_mem_len
 
 thresholds = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
 
-total_mem_acc = []
-unique_mem_acc = []
-total_mem_bleu = []
-unique_mem_bleu = []
-total_mem_chrf = []
-unique_mem_chrf = []
+total_mem_acc = [len(H_mem_acc)]
+unique_mem_acc = [len(unique_H_mem_acc]
+total_mem_bleu = [len(H_mem_bleu)]
+unique_mem_bleu = [len(unique_H_mem_acc)]
+total_mem_chrf = [len(H_mem_chrf)]
+unique_mem_chrf = [len(unique_H_mem_acc)]
+
+from itertools import islice 
+
+dictionary_acc_100 = dict(islice(dictionary_acc.items(),100)
+dictionary_bleu_100 = dict(islice(dictionary_bleu.items(),100)
+dictionary_chrf_100 = dict(islice(dictionary_chrf.items(),100)
 
 for threshold in thresholds:
-    mem_len_acc, unique_mem_len_acc = topfiguredata(dictionary_acc, threshold)
-    mem_len_bleu, unique_mem_len_bleu = topfiguredata(dictionary_bleu, threshold)
-    mem_len_chrf, unique_mem_len_chrf = topfiguredata(dictionary_chrf, threshold)
+    mem_len_acc, unique_mem_len_acc = topfiguredata(dictionary_acc_100, threshold)
+    mem_len_bleu, unique_mem_len_bleu = topfiguredata(dictionary_bleu_100, threshold)
+    mem_len_chrf, unique_mem_len_chrf = topfiguredata(dictionary_chrf_100, threshold)
 
     total_mem_acc.append(mem_len_acc)
     unique_mem_acc.append(unique_mem_len_acc)
