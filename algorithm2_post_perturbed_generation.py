@@ -311,15 +311,15 @@ ex_mem_acc, ex_rand_acc = bottom_figure_data(ex_dicts_acc)
 # graph for Figure 3 (Bottom) chrF
 labels = ['>1', '>2', '>3', '>4']
 
-bar_width = 0.5
+bar_width = 0.4
 
-pos_rand = np.arange(len(ex_rand_chrf))
-pos_mem = [x + bar_width for x in pos_rand]
+x = np.arange(len(ex_rand_chrf))
 
-plt.bar(pos_rand, ex_rand_chrf, width=bar_width, label='Random', color='blue')
-plt.bar(pos_mem, ex_mem_chrf, width=bar_width, label='Memorized', color='orange')
+plt.bar(x - bar_width/2, ex_rand_chrf, width=bar_width, label='Random', color='blue')
+plt.bar(x + bar_width/2, ex_mem_chrf, width=bar_width, label='Memorized', color='orange')
 
 plt.xlabel('Number of Exclusions')
+plt.xticks(x, labels, rotation=45)
 plt.ylabel('Unique Hallucinations')
 
 plt.legend()
@@ -332,15 +332,16 @@ plt.show()
 # graph for Figure 3 (Bottom) bleu
 labels = ['>1', '>2', '>3', '>4']
 
-bar_width = 0.5
+bar_width = 0.4
 
-pos_rand = np.arange(len(ex_rand_bleu))
-pos_mem = [x + bar_width for x in pos_rand]
+x = np.arange(len(ex_rand_bleu))
 
-plt.bar(pos_rand, ex_rand_bleu, width=bar_width, label='Random', color='blue')
-plt.bar(pos_mem, ex_mem_bleu, width=bar_width, label='Memorized', color='orange')
+
+plt.bar(x - bar_width/2, ex_rand_bleu, width=bar_width, label='Random', color='blue')
+plt.bar(x + bar_width/2, ex_mem_bleu, width=bar_width, label='Memorized', color='orange')
 
 plt.xlabel('Number of Exclusions')
+plt.xticks(x, labels, rotation=45)
 plt.ylabel('Unique Hallucinations')
 
 plt.legend()
@@ -353,15 +354,15 @@ plt.show()
 # graph for Figure 3 (Bottom) acc
 labels = ['>1', '>2', '>3', '>4']
 
-bar_width = 0.5
+bar_width = 0.4
 
-pos_rand = np.arange(len(ex_rand_acc))
-pos_mem = [x + bar_width for x in pos_rand]
+x = np.arange(len(ex_rand_acc))
 
-plt.bar(pos_rand, ex_rand_acc, width=bar_width, label='Random', color='blue')
-plt.bar(pos_mem, ex_mem_acc, width=bar_width, label='Memorized', color='orange')
+plt.bar(x - bar_width/2, ex_rand_acc, width=bar_width, label='Random', color='blue')
+plt.bar(x + bar_width/2, ex_mem_acc, width=bar_width, label='Memorized', color='orange')
 
 plt.xlabel('Number of Exclusions')
+plt.xticks(x, labels, rotation=45)
 plt.ylabel('Unique Hallucinations')
 
 plt.legend()
