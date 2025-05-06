@@ -166,9 +166,9 @@ unique_mem_chrf = [len(unique_H_mem_acc)]
 
 from itertools import islice 
 
-dictionary_acc_100 = dict(islice(dictionary_acc.items(),100)
-dictionary_bleu_100 = dict(islice(dictionary_bleu.items(),100)
-dictionary_chrf_100 = dict(islice(dictionary_chrf.items(),100)
+dictionary_acc_100 = dict(islice(dictionary_acc.items(),100))
+dictionary_bleu_100 = dict(islice(dictionary_bleu.items(),100))
+dictionary_chrf_100 = dict(islice(dictionary_chrf.items(),100))
 
 for threshold in thresholds:
     mem_len_acc, unique_mem_len_acc = topfiguredata(dictionary_acc_100, threshold)
