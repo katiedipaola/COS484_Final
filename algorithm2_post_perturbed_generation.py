@@ -138,11 +138,11 @@ unique_H_rand_acc = Unique(H_rand_acc)
 # with BLEU scores onwards:
 # data collection for Figure 3 (Top)
 def topfiguredata(dictionary, threshold):
-  sorted_dictionary = sorted(dictionary.items(), key=lambda x: x[1], reverse=True)
+
   sorted_dictionary_threshold = {k: v for k, v in sorted_dictionary.items() if threshold + 0.1 > v > threshold}
   print(sorted_dictionary)
 
-  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(sorted_dictionar_threshold), sorted_dictionary=sorted_dictionary_threshold)
+  parallel_mem, _, indices, _ = ParallelCorpus(range_val=len(sorted_dictionary_threshold), sorted_dictionary=sorted_dictionary_threshold)
   H_mem = algorithm2_from_predictions(model_preds=model_preds,
   perturbed_preds=perturbed_preds_full_model,
   parallel_corpus= parallel_mem,
