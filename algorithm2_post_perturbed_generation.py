@@ -158,7 +158,7 @@ def topfiguredata(dictionary, threshold):
 thresholds = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.0]
 
 total_mem_acc = [len(H_mem_acc)]
-unique_mem_acc = [len(unique_H_mem_acc]
+unique_mem_acc = [len(unique_H_mem_acc)]
 total_mem_bleu = [len(H_mem_bleu)]
 unique_mem_bleu = [len(unique_H_mem_acc)]
 total_mem_chrf = [len(H_mem_chrf)]
