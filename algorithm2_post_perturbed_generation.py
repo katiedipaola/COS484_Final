@@ -137,7 +137,7 @@ unique_H_rand_acc = Unique(H_rand_acc)
 
 # with BLEU scores onwards:
 # data collection for Figure 3 (Top)
-def topfiguredata(dictionary, threshold):
+def topfiguredata(sorted_dictionary, threshold):
 
   sorted_dictionary_threshold = {k: v for k, v in sorted_dictionary.items() if threshold + 0.1 > v > threshold}
   print(sorted_dictionary)
