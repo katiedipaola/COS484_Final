@@ -10,7 +10,7 @@ for i in range(10):
         "--gen-subset", "train",
         "--beam", "5",
         "--remove-bpe",
-        "--batch-size", "32",
+        "--batch-size", "4096",
         "--results-path", f"results/model{i}"
     ]
 
@@ -24,7 +24,7 @@ command = [
         "--gen-subset", "train",
         "--beam", "5",
         "--remove-bpe",
-        "--batch-size", "32",
+        "--batch-size", "4096",
         "--results-path", f"results/full_model"
 ]
 subprocess.run(command)
