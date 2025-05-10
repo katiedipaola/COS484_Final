@@ -22,7 +22,7 @@ for i in range(10):
         "--disable-validation",
         "--valid-subset", "train",
         f"data-bin/iwslt14_bpe_split{i}",
-        "--max-epoch", "1"
+        "--max-epoch", "70"
     ]
 
     subprocess.run(command)
