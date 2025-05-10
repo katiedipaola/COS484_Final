@@ -9,11 +9,6 @@
 #SBATCH --mail-type=begin        # send email when job begins
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --mail-type=fail         # send email if job fails
-#SBATCH --mail-user=kd5846@princeton.edu
-
-source /home/kd5846/.bashrc  # for bash shells
-conda activate fairseq-gcc9
-
-cd /scratch/network/kd5846/COS484_Final/
+#SBATCH --mail-user=
 
 python generate_perturbation_preds.py
