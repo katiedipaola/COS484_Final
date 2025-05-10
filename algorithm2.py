@@ -53,9 +53,9 @@ def sort_mems(file_name):
 with open('fairseq/iwslt14.tokenized.de-en/train.en', 'r') as f:
     train_en = f.readlines()
 
-dictionary_acc = sort_mems("alg1_output/memorization_scores_acc_excl2.json")
-dictionary_bleu = sort_mems("alg1_output/memorization_scores_bleu_excl2.json")
-dictionary_chrf = sort_mems("alg1_output/memorization_scores_chrf_excl2.json")
+dictionary_acc = sort_mems("memorization_scores_acc_excl2.json")
+dictionary_bleu = sort_mems("memorization_scores_bleu_excl2.json")
+dictionary_chrf = sort_mems("memorization_scores_chrf_excl2.json")
 
 #print("dictionary_acc")
 #print(len(dictionary_acc))
@@ -214,7 +214,7 @@ def algorithm2_from_predictions(model_preds, perturbed_preds, parallel_corpus, i
 
     return H
 
-with open("alg1_output/model_preds2.json") as f:
+with open("model_preds2.json") as f:
     list_of_dicts = json.load(f)
 
 model_preds = {}
@@ -442,20 +442,20 @@ plt.tight_layout()
 plt.savefig("figures/hallucinations_vs_memorization_chrf.png", dpi=300)
 plt.show()
 
-dictionary_bleu1 = sort_mems("alg1_output/memorization_scores_bleu_excl1.json")
-dictionary_bleu2 = sort_mems("alg1_output/memorization_scores_bleu_excl2.json")
-dictionary_bleu3 = sort_mems("alg1_output/memorization_scores_bleu_excl3.json")
-dictionary_bleu4 = sort_mems("alg1_output/memorization_scores_bleu_excl4.json")
+dictionary_bleu1 = sort_mems("memorization_scores_bleu_excl1.json")
+dictionary_bleu2 = sort_mems("memorization_scores_bleu_excl2.json")
+dictionary_bleu3 = sort_mems("memorization_scores_bleu_excl3.json")
+dictionary_bleu4 = sort_mems("memorization_scores_bleu_excl4.json")
 
-dictionary_chrf1 = sort_mems("alg1_output/memorization_scores_chrf_excl1.json")
-dictionary_chrf2 = sort_mems("alg1_output/memorization_scores_chrf_excl2.json")
-dictionary_chrf3 = sort_mems("alg1_output/memorization_scores_chrf_excl3.json")
-dictionary_chrf4 = sort_mems("alg1_output/memorization_scores_chrf_excl4.json")
+dictionary_chrf1 = sort_mems("memorization_scores_chrf_excl1.json")
+dictionary_chrf2 = sort_mems("memorization_scores_chrf_excl2.json")
+dictionary_chrf3 = sort_mems("memorization_scores_chrf_excl3.json")
+dictionary_chrf4 = sort_mems("memorization_scores_chrf_excl4.json")
 
-dictionary_acc1 = sort_mems("alg1_output/memorization_scores_acc_excl1.json")
-dictionary_acc2 = sort_mems("alg1_output/memorization_scores_acc_excl2.json")
-dictionary_acc3 = sort_mems("alg1_output/memorization_scores_acc_excl3.json")
-dictionary_acc4 = sort_mems("alg1_output/memorization_scores_acc_excl4.json")
+dictionary_acc1 = sort_mems("memorization_scores_acc_excl1.json")
+dictionary_acc2 = sort_mems("memorization_scores_acc_excl2.json")
+dictionary_acc3 = sort_mems("memorization_scores_acc_excl3.json")
+dictionary_acc4 = sort_mems("memorization_scores_acc_excl4.json")
 
 def bottom_figure_data(ex_dicts_metric):
   exclusions = [1, 2, 3, 4]
