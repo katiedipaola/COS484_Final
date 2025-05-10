@@ -76,7 +76,7 @@ subprocess.run([
     "--gen-subset", "test",
     "--beam", "5",
     "--remove-bpe",
-    "--batch-size", "32",
+    "--batch-size", "4096",
     "--results-path", results_dir
 ], check=True)
 
