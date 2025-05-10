@@ -11,18 +11,18 @@ cd fairseq
 pip install --editable . --verbose
 pip install subword-nmt sacremoses
 
-cd /scratch/network/kd5846/COS484_Final/fairseq
-mkdir -p /scratch/network/kd5846/bin
-ln -s /scratch/network/kd5846/COS484_Final/fairseq/fairseq_cli/fairseq-preprocess /scratch/network/kd5846/bin/fairseq-preprocess
-chmod +x /scratch/network/kd5846/bin/fairseq-preprocess
+cd fairseq
+mkdir -p bin
+ln -s fairseq/fairseq_cli/fairseq-preprocess fairseq-preprocess
+chmod +x bin/fairseq-preprocess
 
-bash /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/prepare-iwslt14.sh
+bash fairseq/examples/translation/prepare-iwslt14.sh
 
-find /scratch/network/kd5846/COS484_Final/fairseq -name "train.de"
-ls /scratch/network/kd5846/COS484_Final/fairseq/iwslt14.tokenized.de-en/
+find fairseq -name "train.de"
+ls fairseq/iwslt14.tokenized.de-en/
 
-mkdir -p /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/iwslt14.tokenized.de-en/
-cp /scratch/network/kd5846/COS484_Final/fairseq/iwslt14.tokenized.de-en/train.de /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/iwslt14.tokenized.de-en/train.de
-cp /scratch/network/kd5846/COS484_Final/fairseq/iwslt14.tokenized.de-en/train.en /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/iwslt14.tokenized.de-en/train.en
+mkdir -p fairseq/examples/translation/iwslt14.tokenized.de-en/
+cp fairseq/iwslt14.tokenized.de-en/train.de fairseq/examples/translation/iwslt14.tokenized.de-en/train.de
+cp fairseq/iwslt14.tokenized.de-en/train.en fairseq/examples/translation/iwslt14.tokenized.de-en/train.en
 
-ls /scratch/network/kd5846/COS484_Final/fairseq/examples/translation/iwslt14.tokenized.de-en/train.de
+ls fairseq/examples/translation/iwslt14.tokenized.de-en/train.de
