@@ -9,7 +9,7 @@
 #SBATCH --mail-type=begin        # send email when job begins
 #SBATCH --mail-type=end          # send email when job ends
 #SBATCH --mail-type=fail         # send email if job fails
-#SBATCH --mail-user=kd5846@princeton.edu
+#SBATCH --mail-user=
 
 conda activate fairseq-gcc9
-python training_split_data_slurm.py
+python training_split_data.py
